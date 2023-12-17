@@ -1,7 +1,7 @@
-package mosa.fall2022.ui;
+package ui;
 
-import mosa.fall2022.utils.Employee;
-import mosa.fall2022.utils.Schedule;
+import utils.Employee;
+import utils.Schedule;
 
 public class Printer {
 

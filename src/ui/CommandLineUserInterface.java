@@ -1,10 +1,10 @@
-package mosa.fall2022.ui;
+package ui;
 
-import mosa.fall2022.processor.Processor;
-import mosa.fall2022.utils.Employee;
-import mosa.fall2022.utils.Schedule;
-import mosa.fall2022.utils.exceptions.NoPossibleScheduleException;
-import mosa.fall2022.utils.exceptions.TimeoutExitException;
+import processor.Processor;
+import utils.Employee;
+import utils.Schedule;
+import utils.exceptions.NoPossibleScheduleException;
+import utils.exceptions.TimeoutExitException;
 
 import java.util.*;
 

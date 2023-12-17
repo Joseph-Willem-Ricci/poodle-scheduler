@@ -1,4 +1,4 @@
-package mosa.fall2022.ui;
+package ui;
 
 import java.util.Scanner;
 

@@ -1,9 +1,9 @@
-package mosa.fall2022.processor;
+package processor;
 
-import mosa.fall2022.ui.UserInput;
-import mosa.fall2022.utils.Employee;
-import mosa.fall2022.utils.exceptions.RuntimeTimeoutException;
-import mosa.fall2022.utils.exceptions.TimeoutExitException;
+import ui.UserInput;
+import utils.Employee;
+import utils.exceptions.RuntimeTimeoutException;
+import utils.exceptions.TimeoutExitException;
 
 import java.util.*;
 

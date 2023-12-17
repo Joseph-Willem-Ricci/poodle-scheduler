@@ -1,10 +1,10 @@
-package mosa.fall2022.demo;
+package demo;
 
-import mosa.fall2022.Main;
+import Main;
 
 public class Demo {
 	
-	private final String path = "src/mosa/fall2022/demo/";
+	private final String path = "src/demo/";
 
 	String input0 = path + "demo0.txt";
 	String input1 = path + "demo1.txt";

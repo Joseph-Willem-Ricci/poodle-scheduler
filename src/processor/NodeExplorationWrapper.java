@@ -1,6 +1,6 @@
-package mosa.fall2022.processor;
+package processor;
 
-import mosa.fall2022.utils.Employee;
+import utils.Employee;
 
 public class NodeExplorationWrapper implements Comparable<NodeExplorationWrapper>{
     final Employee employee;

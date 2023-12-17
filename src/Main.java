@@ -1,13 +1,12 @@
-package mosa.fall2022;
 import java.util.*;
 
-import mosa.fall2022.datamanagement.TextFileParser;
-import mosa.fall2022.processor.Processor;
-import mosa.fall2022.ui.CommandLineUserInterface;
-import mosa.fall2022.ui.Printer;
-import mosa.fall2022.utils.Employee;
-import mosa.fall2022.utils.Schedule;
-import mosa.fall2022.demo.*;
+import datamanagement.TextFileParser;
+import processor.Processor;
+import ui.CommandLineUserInterface;
+import ui.Printer;
+import utils.Employee;
+import utils.Schedule;
+import demo.*;
 
 public class Main {
 	

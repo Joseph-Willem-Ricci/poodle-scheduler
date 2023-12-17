@@ -1,10 +1,10 @@
-package mosa.fall2022.processor;
+package processor;
 
-import mosa.fall2022.utils.Employee;
-import mosa.fall2022.utils.Schedule;
-import mosa.fall2022.utils.exceptions.InsufficientEmployeeException;
-import mosa.fall2022.utils.exceptions.InsufficientQuotasException;
-import mosa.fall2022.utils.exceptions.NoPossibleScheduleException;
+import utils.Employee;
+import utils.Schedule;
+import utils.exceptions.InsufficientEmployeeException;
+import utils.exceptions.InsufficientQuotasException;
+import utils.exceptions.NoPossibleScheduleException;
 
 import java.util.*;
 

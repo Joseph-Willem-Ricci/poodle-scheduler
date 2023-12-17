@@ -1,10 +1,10 @@
-package mosa.fall2022.unittests;
+package unittests;
 
-import mosa.fall2022.processor.GraphTraversalHelper;
-import mosa.fall2022.processor.Processor;
-import mosa.fall2022.utils.Employee;
-import mosa.fall2022.utils.Schedule;
-import mosa.fall2022.utils.exceptions.InsufficientEmployeeException;
+import processor.GraphTraversalHelper;
+import processor.Processor;
+import utils.Employee;
+import utils.Schedule;
+import utils.exceptions.InsufficientEmployeeException;
 import org.junit.Assert;
 import org.junit.Test;
 
