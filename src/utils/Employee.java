@@ -1,4 +1,4 @@
-package mosa.fall2022.utils;
+package utils;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package mosa.fall2022.utils.exceptions;
+package utils.exceptions;
 
 public class InvalidFileException extends RuntimeException{
     public InvalidFileException(String message){

@@ -1,4 +1,4 @@
-package mosa.fall2022.utils.exceptions;
+package utils.exceptions;
 
 public class InsufficientQuotasException extends RuntimeException {
 	public InsufficientQuotasException (int sumOfQuotas, int daysInMonth) {

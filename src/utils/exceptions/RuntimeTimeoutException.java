@@ -1,4 +1,4 @@
-package mosa.fall2022.utils.exceptions;
+package utils.exceptions;
 
 public class RuntimeTimeoutException extends RuntimeException { //TODO I think maybe this isn't supposed to be a RuntimeException
 	public RuntimeTimeoutException(long timeOutAfterMS) {
