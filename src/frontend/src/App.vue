@@ -4,7 +4,7 @@
       <Calendar v-model="selectedDates" :minDate="nextMonthFirstDay" :maxDate="nextMonthLastDay" selectionMode="multiple" inline/>
       <form @submit.prevent="handleSubmit">
         <input v-model="name" placeholder="Name" required />
-        <input v-model.number="quota" placeholder="Quota" required />
+        <input v-model.number="quota" placeholder="Quota" required @blur="validateQuota" />
         <button type="submit">Submit Schedule</button>
       </form>
       <button @click="submitAll">Submit All</button>
@@ -46,6 +46,13 @@ export default {
     this.nextMonthLastDay = new Date(today.getFullYear(), nextMonth + 1, 0);
   },
   methods: {
+    validateQuota() {
+      const nextMonthDays = this.nextMonthLastDay.getDate();
+      if (this.quota < 0 || this.quota > nextMonthDays || !Number.isInteger(this.quota)) {
+        alert(`Quota must be an integer between 0 and ${nextMonthDays}`);
+        this.quota = null;
+      }
+    },
     handleSubmit() {
       const availability = {
         name: this.name,
