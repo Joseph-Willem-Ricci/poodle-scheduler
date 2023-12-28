@@ -22,6 +22,7 @@
 
 <script>
 import Calendar from 'primevue/calendar';
+import axios from 'axios'
 
 export default {
   components: {
@@ -71,8 +72,19 @@ export default {
       this.selectedDates = availability.dates;
       this.editIndex = index;
     },
-    submitAll() {
-      console.log(this.availabilities)
+    async submitAll() {
+      try {
+        // TODO: insert API endpoint
+        const response = await axios.post('https://apiendpoint.com', this.availabilities);
+        if (response.status === 200) {
+          alert('Submitted successfully');
+          this.availabilities = [];
+        } else {
+          alert('Something went wrong');
+        }
+      } catch (error) {
+          console.error("Error: ", error)
+      }
     }
   }
 }
