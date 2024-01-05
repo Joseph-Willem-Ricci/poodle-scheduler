@@ -1,14 +1,17 @@
 package com.poodle.backend;
 
+import com.poodle.utils.Schedule;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api")
 public class ProcessorController {
 
     @PostMapping("/process")
-    public String processInput(@RequestBody String input) {
-        // Processor processor = new Processor(input);  //TODO: parse input into expected params
-        // return processor.run();
-        return "Hello World!";
+    public Schedule processFrontEndInput(@RequestBody ScheduleRequest request) {
+        Processor processor = new Processor(request.getEmployeeList(), request.getNumberOfDays());
+        Schedule schedule = processor.run();
+        return schedule;
     }
 }

@@ -6,21 +6,23 @@ import java.util.stream.Collectors;
 public class Employee {
     private String name;
     private int quota;
-    private SortedSet<Integer> availability;
+    private SortedSet<Integer> dates;
     private SortedSet<Integer> schedule = new TreeSet<Integer>();
 
-    public Employee(String name, int quota, int[] availability){
+    public Employee() {} // for Jackson deserialization..?
+
+    public Employee(String name, int quota, int[] dates){
         this.name = name;
         this.quota = quota;
-        this.availability = Arrays.stream(availability)
+        this.dates = Arrays.stream(dates)
                 .boxed()
                 .collect(Collectors.toCollection(TreeSet::new));
     }
 
-    public Employee(String name, int quota, Collection<Integer> availability){
+    public Employee(String name, int quota, Collection<Integer> dates){
         this.name = name;
         this.quota = quota;
-        this.availability = new TreeSet<Integer>(availability);
+        this.dates = new TreeSet<Integer>(dates);
     }
 
     public SortedSet<Integer> getSchedule(){
@@ -32,7 +34,7 @@ public class Employee {
             return true;
         }
         if (
-            !availability.contains(day) ||
+            !dates.contains(day) ||
             schedule.size() >= quota ||
             schedule.contains(day-1) ||
             schedule.contains(day+1)
@@ -57,7 +59,7 @@ public class Employee {
     	return this.schedule.size();
     }
     public SortedSet<Integer> getAvailability(){
-        return availability;
+        return dates;
     }
 
     @Override
@@ -66,7 +68,7 @@ public class Employee {
                 "name='" + name + '\'' +
                 ", quota=" + quota +
                 ", schedule=" + schedule +
-                ", availability=" + availability +
+                ", availability=" + dates +
                 '}';
     }
     

@@ -81,8 +81,21 @@ export default {
     },
     async submitAll() {
       try {
-        // TODO: insert API endpoint
-        const response = await axios.post('https://apiendpoint.com', this.availabilities);
+        // Transform the availabilities' dates to integers
+        const transformedAvailabilities = this.availabilities.map(availability => {
+          const transformedDates = availability.dates.map(date => {
+            const dateObject = new Date(date);
+            return dateObject.getDate(); // get the day of the month as an integer
+          });
+          return { ...availability, dates: transformedDates };
+        });
+
+        const data = {
+        employeeList: transformedAvailabilities,
+        numberOfDays: this.nextMonthLastDay.getDate()
+        };
+
+        const response = await axios.post('https://apiendpoint.com', data);  //TODO: replace with your API endpoint
         if (response.status === 200) {
           alert('Submitted successfully');
           this.availabilities = [];

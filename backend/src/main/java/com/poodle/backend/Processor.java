@@ -17,11 +17,11 @@ public class Processor {
     public final int daysInMonth;
     private boolean randomness;
 	
-    public Processor(List<Employee> employeeList, int numOfDays, boolean randomness){
+    public Processor(List<Employee> employeeList, int numOfDays){
         employees = employeeList;
         daysInMonth = numOfDays;
         schedule = new Schedule(numOfDays);
-        this.randomness = randomness;
+        this.randomness = false;  //TODO: add randomness option
         initAvailabilityMap();
     }
     
