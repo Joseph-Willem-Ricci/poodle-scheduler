@@ -1,10 +1,6 @@
-package demo;
-
-import Main;
-
 public class Demo {
 	
-	private final String path = "src/demo/";
+	private final String path = "demo/";
 
 	String input0 = path + "demo0.txt";
 	String input1 = path + "demo1.txt";

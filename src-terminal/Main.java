@@ -1,12 +1,8 @@
 import java.util.*;
 
 import datamanagement.TextFileParser;
-import processor.Processor;
 import ui.CommandLineUserInterface;
-import ui.Printer;
 import utils.Employee;
-import utils.Schedule;
-import demo.*;
 
 public class Main {
 	
