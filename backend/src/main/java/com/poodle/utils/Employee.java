@@ -55,12 +55,30 @@ public class Employee {
     public int getQuota() {
     	return this.quota;
     }
+
+    public SortedSet<Integer> getDates() {
+        return this.dates;
+    }
+
     public int getShiftCount() {
     	return this.schedule.size();
     }
-    public SortedSet<Integer> getAvailability(){
-        return dates;
+
+    /**
+     * Setters
+     */
+    public void setName(String name) {
+        this.name = name;
     }
+
+    public void setQuota(int quota) {
+        this.quota = quota;
+    }
+
+    public void setDates(SortedSet<Integer> dates) {
+        this.dates = dates;
+    }
+
 
     @Override
     public String toString() {

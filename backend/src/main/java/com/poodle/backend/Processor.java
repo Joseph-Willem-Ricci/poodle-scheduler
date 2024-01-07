@@ -17,7 +17,7 @@ public class Processor {
     public final int daysInMonth;
     private boolean randomness;
 	
-    public Processor(List<Employee> employeeList, int numOfDays){
+    public Processor(List<Employee> employeeList, int numOfDays) {
         employees = employeeList;
         daysInMonth = numOfDays;
         schedule = new Schedule(numOfDays);
@@ -25,45 +25,45 @@ public class Processor {
         initAvailabilityMap();
     }
     
-    public void initAvailabilityMap(){
-        for (int d = 1; d <= daysInMonth; d++){
+    public void initAvailabilityMap() {
+        for (int d = 1; d <= daysInMonth; d++) {
             availabilityMap.put(d, new HashSet<Employee>());
         }
         addEmployeesToAvailabilityMap();
     }
 
-    public void addEmployeesToAvailabilityMap(){
-        for(Employee e: employees){
-            for(Integer day: e.getAvailability()){
+    public void addEmployeesToAvailabilityMap() {
+        for(Employee e: employees) {
+            for(Integer day: e.getDates()) {
                 Set<Employee> availableOnDay = availabilityMap.get(day);
                 availableOnDay.add(e);
             }
         }
     }
 
-    public void checkIfAssignmentIsImpossible(){;
+    public void checkIfAssignmentIsImpossible() {
         List<Integer> emptyDays = new ArrayList<Integer>();
-        for(int d = 1; d <= daysInMonth; d++){
-            if (schedule.getEmployeeAssignedForGivenDay(d) != null){
+        for(int d = 1; d <= daysInMonth; d++) {
+            if (schedule.getEmployeeAssignedForGivenDay(d) != null) {
                 continue;
             }
-            if (availabilityMap.get(d).size() == 0){
+            if (availabilityMap.get(d).size() == 0) {
                 emptyDays.add(d);
             }
         }
 
-        if (!emptyDays.isEmpty() ){
+        if ( !emptyDays.isEmpty() ) {
             throw new InsufficientEmployeeException(emptyDays);
         }
     }
 
-    public Schedule assignEmployeesDeterministically(){
+    public Schedule assignEmployeesDeterministically() {
         int filledDays = -1;
-        while(filledDays != schedule.getFilledDays()){
+        while(filledDays != schedule.getFilledDays()) {
             filledDays = schedule.getFilledDays();
 
             Integer day = findDayWithLoneCandidate();
-            if (day == null){
+            if (day == null) {
                 return schedule;
             }
 
@@ -74,31 +74,31 @@ public class Processor {
         return schedule;
     }
 
-    public Integer findDayWithLoneCandidate(){
-        for(int day = 1; day <= daysInMonth; day++){
+    public Integer findDayWithLoneCandidate() {
+        for(int day = 1; day <= daysInMonth; day++) {
             if (
             	availabilityMap.get(day).size() == 1 &&
                 schedule.getEmployeeAssignedForGivenDay(day) == null
-            ){
+            ) {
                 return day;
             }
         }
         return null;
     }
 
-    public void assignLoneCandidate(int day){
-        for(Employee e: availabilityMap.get(day) ){
-            if ( !schedule.assignEmployee(day, e) ){
+    public void assignLoneCandidate(int day) {
+        for(Employee e: availabilityMap.get(day) ) {
+            if ( !schedule.assignEmployee(day, e) ) {
                 throw new RuntimeException("Lone employee quota met for day:" + day );
             }
             removeEmployeeForNeighboringDays(e, day);
         }
     }
 
-    public void removeEmployeeForNeighboringDays(Employee employee, int day){
+    public void removeEmployeeForNeighboringDays(Employee employee, int day) {
         int dayBefore = day - 1;
         int dayAfter = day + 1;
-        if (dayBefore >= 1){
+        if (dayBefore >= 1) {
             availabilityMap.get(dayBefore).remove(employee);
         }
         if (dayAfter <= schedule.getTotalDays() ) {
@@ -127,13 +127,13 @@ public class Processor {
     	
     }
 
-    public Schedule run(){
+    public String run() {
 
     	validateInputs();
     	
         assignEmployeesDeterministically();
-        if (schedule.getFilledDays() == daysInMonth){
-            return schedule;
+        if (schedule.getFilledDays() == daysInMonth) {
+            return schedule.toString();
         }
 
         GraphTraversalHelper graphTraversalHelper = new GraphTraversalHelper(availabilityMap, employees, daysInMonth, randomness);
@@ -144,12 +144,12 @@ public class Processor {
             Node currentNode = graphTraversalHelper.endNode;
             currentNode != null && currentNode.parent != null;
             currentNode = currentNode.parent
-        ){
+        ) {
             schedule.assignEmployee(currentNode.day, currentNode.assignedEmployee);
         }
 
-        if (schedule.getFilledDays() == daysInMonth){
-	        return schedule;
+        if (schedule.getFilledDays() == daysInMonth) {
+	        return schedule.toString();
         }
         
         throw new NoPossibleScheduleException("No schedule was found for your input availabilies. Please double check your inputs.");

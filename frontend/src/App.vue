@@ -8,6 +8,7 @@
         <button type="submit">Submit Schedule</button>
       </form>
       <button @click="submitAll">Submit All</button>
+      <div v-if="responseData">{{ responseData }}</div>
       <div class="availabilities">
         <h2>Submitted Schedules</h2>
         <div v-for="(availability, index) in availabilities" :key="index">
@@ -30,13 +31,14 @@ export default {
   },
   data() {
     return {
-      selectedDates: [],
-      nextMonthFirstDay: null,
-      nextMonthLastDay: null,
       name: '',
-      quota: null,
+      selectedDates: [],
       availabilities: [],
-      editIndex: null
+      quota: null,
+      editIndex: null,
+      responseData: null,
+      nextMonthLastDay: null,
+      nextMonthFirstDay: null      
     };
   },
   created() {
@@ -73,11 +75,11 @@ export default {
       this.selectedDates = [];
     },
     editSchedule(index) {
-      const availability = this.availabilities[index];
+      this.editIndex = index;
       this.name = availability.name;
       this.quota = availability.quota;
       this.selectedDates = availability.dates;
-      this.editIndex = index;
+      const availability = this.availabilities[index];
     },
     async submitAll() {
       try {
@@ -90,13 +92,15 @@ export default {
           return { ...availability, dates: transformedDates };
         });
 
+        // Compile availabilities into format that the backend expects
         const data = {
         employeeList: transformedAvailabilities,
         numberOfDays: this.nextMonthLastDay.getDate()
         };
 
-        const response = await axios.post('https://apiendpoint.com', data);  //TODO: replace with your API endpoint
+        const response = await axios.post('http://localhost:8080/api/process', data);  //TODO: replace with your API endpoint
         if (response.status === 200) {
+          this.responseData = response.data;
           alert('Submitted successfully');
           this.availabilities = [];
         } else {
@@ -104,6 +108,7 @@ export default {
         }
       } catch (error) {
           console.error("Error: ", error)
+          alert('Error in submitting');
       }
     }
   }
