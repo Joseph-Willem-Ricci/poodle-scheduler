@@ -36,6 +36,7 @@ export default {
       availabilities: [],
       quota: null,
       editIndex: null,
+      availability: null,
       responseData: null,
       nextMonthLastDay: null,
       nextMonthFirstDay: null      
@@ -75,11 +76,11 @@ export default {
       this.selectedDates = [];
     },
     editSchedule(index) {
+      const availability = this.availabilities[index];
       this.editIndex = index;
       this.name = availability.name;
       this.quota = availability.quota;
       this.selectedDates = availability.dates;
-      const availability = this.availabilities[index];
     },
     async submitAll() {
       try {
@@ -103,12 +104,16 @@ export default {
           this.responseData = response.data;
           alert('Submitted successfully');
           this.availabilities = [];
+        }
+        else if (response.status === 500) {
+          console.error("Error: ", response.data)
+          alert('Server error: ' + response.data.message)
         } else {
           alert('Something went wrong');
         }
       } catch (error) {
           console.error("Error: ", error)
-          alert('Error in submitting');
+          alert(error.response.data);
       }
     }
   }
