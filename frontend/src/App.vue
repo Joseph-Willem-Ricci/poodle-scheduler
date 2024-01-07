@@ -8,7 +8,9 @@
         <button type="submit">Submit Schedule</button>
       </form>
       <button @click="submitAll">Submit All</button>
-      <div v-if="responseData">{{ responseData }}</div>
+      <div v-if="responseData">
+        <h2>Schedule</h2>
+        {{ responseData }}</div>
       <div class="availabilities">
         <h2>Submitted Schedules</h2>
         <div v-for="(availability, index) in availabilities" :key="index">
@@ -102,8 +104,6 @@ export default {
         const response = await axios.post('http://localhost:8080/api/process', data);  //TODO: replace with your API endpoint
         if (response.status === 200) {
           this.responseData = response.data;
-          alert('Submitted successfully');
-          this.availabilities = [];
         }
         else if (response.status === 500) {
           console.error("Error: ", response.data)

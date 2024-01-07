@@ -25,10 +25,6 @@ public class Employee {
         this.dates = new TreeSet<Integer>(dates);
     }
 
-    public SortedSet<Integer> getSchedule(){
-        return this.schedule;
-    }
-
     public boolean assignDay(int day){
         if (schedule.contains(day)){
             return true;
@@ -62,6 +58,10 @@ public class Employee {
 
     public int getShiftCount() {
     	return this.schedule.size();
+    }
+
+    public SortedSet<Integer> getSchedule() {
+    	return this.schedule;
     }
 
     /**

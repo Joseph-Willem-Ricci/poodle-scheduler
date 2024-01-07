@@ -127,13 +127,17 @@ public class Processor {
     	
     }
 
-    public String run() {
+    public String run() {  // TODO: Format output for frontend instead of String
 
     	validateInputs();
     	
         assignEmployeesDeterministically();
         if (schedule.getFilledDays() == daysInMonth) {
-            return schedule.toString();
+            String employeeShifts = "";
+            for (Employee e : employees) {
+                employeeShifts += e.getName() + ": " + e.getSchedule() + "\n";
+            }
+            return schedule.toString() + "\n" + employeeShifts;
         }
 
         GraphTraversalHelper graphTraversalHelper = new GraphTraversalHelper(availabilityMap, employees, daysInMonth, randomness);
@@ -149,7 +153,11 @@ public class Processor {
         }
 
         if (schedule.getFilledDays() == daysInMonth) {
-	        return schedule.toString();
+            String employeeShifts = "";
+            for (Employee e : employees) {
+                employeeShifts += e.getName() + ": " + e.getSchedule() + "\n";
+            }
+            return schedule.toString() + "\n\n" + employeeShifts;
         }
         
         throw new NoPossibleScheduleException("No schedule was found for your input availabilies. Please double check your inputs.");
