@@ -10,7 +10,9 @@
       <button @click="submitAll">Submit All</button>
       <div v-if="responseData">
         <h2>Schedule</h2>
-        {{ responseData }}</div>
+        {{ responseData }}
+        <!-- <div id="paypal-button-container"></div> -->
+      </div>
       <div class="availabilities">
         <h2>Submitted Schedules</h2>
         <div v-for="(availability, index) in availabilities" :key="index">
@@ -50,6 +52,12 @@ export default {
     this.nextMonthFirstDay = new Date(today.getFullYear(), nextMonth, 1);
     this.nextMonthLastDay = new Date(today.getFullYear(), nextMonth + 1, 0);
   },
+  // mounted() {
+  //   const script = document.createElement('script');
+  //   script.src = 'https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID_HERE&currency=USD';
+  //   script.onload = this.setPaypalButton;
+  //   document.body.appendChild(script);
+  // },
   methods: {
     validateQuota() {
       const nextMonthDays = this.nextMonthLastDay.getDate();
@@ -115,7 +123,25 @@ export default {
           console.error("Error: ", error)
           alert(error.response.data);
       }
-    }
+    },
+    // setPaypalButton() {
+    //   window.paypal.Buttons({
+    //     createOrder: function(data, actions) {
+    //       return actions.order.create({
+    //         purchase_units: [{
+    //           amount: {
+    //             value: '10.00' // Set your donation amount here
+    //           }
+    //         }]
+    //       });
+    //     },
+    //     onApprove: function(data, actions) {
+    //       return actions.order.capture().then(function(details) {
+    //         alert('Transaction completed by ' + details.payer.name.given_name);
+    //       });
+    //     }
+    //   }).render('#paypal-button-container');
+    // }
   }
 }
 </script>
