@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - main  # Set a branch to trigger deployment
+      - master  # Set a branch to trigger deployment
 
 jobs:
   deploy:
@@ -34,4 +34,3 @@ jobs:
           clean: true  # Automatically remove old files from the deployment branch
           token: ${{ secrets.GITHUB_TOKEN }}  # GitHub automatically creates a `GITHUB_TOKEN` secret to use in your workflow.
 
-          
