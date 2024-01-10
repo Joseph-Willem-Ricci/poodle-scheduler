@@ -109,7 +109,7 @@ export default {
         numberOfDays: this.nextMonthLastDay.getDate()
         };
 
-        const response = await axios.post('pet-poodle-scheduler.koyeb.app/process', data);  //TODO: replace with your API endpoint
+        const response = await axios.post('https://pet-poodle-scheduler.koyeb.app/process', data);  //TODO: replace with your API endpoint
         if (response.status === 200) {
           this.responseData = response.data;
         }
