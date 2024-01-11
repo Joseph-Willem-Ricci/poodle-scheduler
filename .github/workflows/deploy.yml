@@ -3,10 +3,10 @@ name: Deploy
 on:
   push:
     branches:
-      - master  # Set a branch to trigger deployment
+      - master
   pull_request:
     branches:
-      - master  # Set a branch to trigger deployment
+      - master
 
 permissions:
   contents: write

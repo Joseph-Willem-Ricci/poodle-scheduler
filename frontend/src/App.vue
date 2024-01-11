@@ -1,24 +1,30 @@
 <template>
   <div id="app">
     <div class='wrap'>
-      <Calendar v-model="selectedDates" :minDate="nextMonthFirstDay" :maxDate="nextMonthLastDay" selectionMode="multiple" inline/>
-      <form @submit.prevent="handleSubmit">
-        <input v-model="name" placeholder="Name" required />
-        <input v-model.number="quota" placeholder="Quota" required @blur="validateQuota" />
-        <button type="submit">Submit Schedule</button>
-      </form>
-      <button @click="submitAll">Submit All</button>
+      <div v-if="!monthSelected">
+        <h2>Select a month to schedule</h2>
+        <Calendar v-model="selectedMonth" view="month" dateFormat="mm/yy" @update:modelValue="handleMonthSelect" />
+      </div>
+      <div v-else>
+        <Calendar v-model="selectedDates" :minDate="firstDayOfMonth" :maxDate="lastDayOfMonth" selectionMode="multiple" inline/>
+        <form @submit.prevent="handleSubmit">
+          <input v-model="name" placeholder="Name" required />
+          <input v-model.number="quota" placeholder="Quota" required @blur="validateQuota" />
+          <button type="submit">Submit Availability</button>
+        </form>
+        <button @click="submitAll">Get Schedule</button>
+      </div>
       <div v-if="responseData">
         <h2>Schedule</h2>
         {{ responseData }}
-        <!-- <div id="paypal-button-container"></div> -->
-      </div>
+        <p>Donations can be made via PayPal to <a :href="'https://paypal.me/jwricci'" target="_blank">https://paypal.me/jwricci</a></p>      </div>
       <div class="availabilities">
-        <h2>Submitted Schedules</h2>
+        <h2 v-if="availabilities.length">Employee Availabilities</h2>
         <div v-for="(availability, index) in availabilities" :key="index">
           <h3>{{ availability.name }}</h3>
           <p>Quota: {{ availability.quota }}</p>
-          <p>Dates: {{ availability.dates.sort((a, b) => a - b).map(date => date.getDate()).join(', ') }}</p>          <button @click="editSchedule(index)">Edit</button>
+          <p>Dates: {{ availability.dates.sort((a, b) => a - b).map(date => date.getDate()).join(', ') }}</p>
+          <button @click="editSchedule(index)">Edit</button>
         </div>
       </div>
     </div>
@@ -42,35 +48,63 @@ export default {
       editIndex: null,
       availability: null,
       responseData: null,
-      nextMonthLastDay: null,
-      nextMonthFirstDay: null      
+      selectedMonth: null,
+      monthSelected: false
     };
   },
-  created() {
-    const today = new Date();
-    const nextMonth = today.getMonth() + 1;
-    this.nextMonthFirstDay = new Date(today.getFullYear(), nextMonth, 1);
-    this.nextMonthLastDay = new Date(today.getFullYear(), nextMonth + 1, 0);
+  computed: {
+    firstDayOfMonth() {
+      if (this.selectedMonth) {
+        const month = this.selectedMonth.getMonth();
+        const year = this.selectedMonth.getFullYear();
+        return new Date(year, month, 1);
+      }
+      return null;
+    },
+    lastDayOfMonth() {
+      if (this.selectedMonth) {
+        const month = this.selectedMonth.getMonth();
+        const year = this.selectedMonth.getFullYear();
+        return new Date(year, month + 1, 0);
+      }
+      return null;
+    }
   },
-  // mounted() {
-  //   const script = document.createElement('script');
-  //   script.src = 'https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID_HERE&currency=USD';
-  //   script.onload = this.setPaypalButton;
-  //   document.body.appendChild(script);
-  // },
   methods: {
+    handleMonthSelect() {
+      this.monthSelected = true;
+      this.selectedDates = this.getAllDatesInMonth();
+    },
+    getAllDatesInMonth() {
+      // The calendar begins will all dates in month selected by default as a workaround
+      // for how the calendar only opens to the current month when no dates are selected
+      // handleSubmit() and editSchedule() convert when reading/writing availabilities
+      const dates = [];
+      const year = this.selectedMonth.getFullYear();
+      const month = this.selectedMonth.getMonth();
+      const date = new Date(year, month + 1, 0);
+      const numDays = date.getDate();
+      for (let i = 1; i <= numDays; i++) {
+        dates.push(new Date(year, month, i));
+      }
+      return dates;
+    },
     validateQuota() {
-      const nextMonthDays = this.nextMonthLastDay.getDate();
-      if (this.quota < 0 || this.quota > nextMonthDays || !Number.isInteger(this.quota)) {
-        alert(`Quota must be an integer between 0 and ${nextMonthDays}`);
+      const numDays = this.lastDayOfMonth.getDate()
+      if (this.quota < 0 || this.quota > numDays || !Number.isInteger(this.quota)) {
+        alert(`Quota must be an integer between 0 and ${numDays}`);
         this.quota = null;
       }
     },
     handleSubmit() {
+      // convert unselected dates to selected dates
+      const allDatesInMonth = this.getAllDatesInMonth().map(date => date.getTime());
+      const selectedDatesTimestamps = this.selectedDates.map(date => new Date(date).getTime());
+      const unselectedDates = allDatesInMonth.filter(date => !selectedDatesTimestamps.includes(date));
       const availability = {
         name: this.name,
         quota: this.quota,
-        dates: this.selectedDates.map(date => new Date(date))
+        dates: unselectedDates.map(date => new Date(date))
       };
       if (this.editIndex !== null) {
         this.availabilities[this.editIndex] = availability;
@@ -83,14 +117,17 @@ export default {
     resetForm() {
       this.name = '';
       this.quota = null;
-      this.selectedDates = [];
+      this.handleMonthSelect();  // resets selected dates to all dates
     },
     editSchedule(index) {
       const availability = this.availabilities[index];
       this.editIndex = index;
       this.name = availability.name;
       this.quota = availability.quota;
-      this.selectedDates = availability.dates;
+      // convert unselected dates to selected dates for display
+      const allDatesInMonth = this.getAllDatesInMonth().map(date => date.getTime());
+      const availabilityDatesTimestamps = availability.dates.map(date => new Date(date).getTime());
+      this.selectedDates = allDatesInMonth.filter(date => !availabilityDatesTimestamps.includes(date)).map(date => new Date(date));
     },
     async submitAll() {
       try {
@@ -98,7 +135,7 @@ export default {
         const transformedAvailabilities = this.availabilities.map(availability => {
           const transformedDates = availability.dates.map(date => {
             const dateObject = new Date(date);
-            return dateObject.getDate(); // get the day of the month as an integer
+            return dateObject.getDate();
           });
           return { ...availability, dates: transformedDates };
         });
@@ -106,10 +143,10 @@ export default {
         // Compile availabilities into format that the backend expects
         const data = {
         employeeList: transformedAvailabilities,
-        numberOfDays: this.nextMonthLastDay.getDate()
+        numberOfDays: this.lastDayOfMonth.getDate()
         };
 
-        const response = await axios.post('https://pet-poodle-scheduler.koyeb.app/api/process', data);  //TODO: replace with your API endpoint
+        const response = await axios.post('https://pet-poodle-scheduler.koyeb.app/api/process', data);
         if (response.status === 200) {
           this.responseData = response.data;
         }
@@ -123,25 +160,7 @@ export default {
           console.error("Error: ", error)
           alert(error.response.data);
       }
-    },
-    // setPaypalButton() {
-    //   window.paypal.Buttons({
-    //     createOrder: function(data, actions) {
-    //       return actions.order.create({
-    //         purchase_units: [{
-    //           amount: {
-    //             value: '10.00' // Set your donation amount here
-    //           }
-    //         }]
-    //       });
-    //     },
-    //     onApprove: function(data, actions) {
-    //       return actions.order.capture().then(function(details) {
-    //         alert('Transaction completed by ' + details.payer.name.given_name);
-    //       });
-    //     }
-    //   }).render('#paypal-button-container');
-    // }
+    }
   }
 }
 </script>
@@ -151,8 +170,19 @@ export default {
     margin: 0px auto;
     max-width: 250px;
 }
-.p-calendar .p-highlight {
+
+.p-calendar td span {
   background-color: #ff0000;
   color: #000000;
+}
+
+.p-calendar .p-highlight {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.p-calendar .p-disabled {
+  background-color: #ffffff;
+  color: #ffffff;
 }
 </style>
