@@ -6,23 +6,23 @@ import java.util.stream.Collectors;
 public class Employee {
     private String name;
     private int quota;
-    private SortedSet<Integer> dates;
+    private SortedSet<Integer> availability;
     private SortedSet<Integer> schedule = new TreeSet<Integer>();
 
     public Employee() {} // for Jackson deserialization..?
 
-    public Employee(String name, int quota, int[] dates){
+    public Employee(String name, int quota, int[] availability){
         this.name = name;
         this.quota = quota;
-        this.dates = Arrays.stream(dates)
+        this.availability = Arrays.stream(availability)
                 .boxed()
                 .collect(Collectors.toCollection(TreeSet::new));
     }
 
-    public Employee(String name, int quota, Collection<Integer> dates){
+    public Employee(String name, int quota, Collection<Integer> availability){
         this.name = name;
         this.quota = quota;
-        this.dates = new TreeSet<Integer>(dates);
+        this.availability = new TreeSet<Integer>(availability);
     }
 
     public boolean assignDay(int day){
@@ -30,7 +30,7 @@ public class Employee {
             return true;
         }
         if (
-            !dates.contains(day) ||
+            !availability.contains(day) ||
             schedule.size() >= quota ||
             schedule.contains(day-1) ||
             schedule.contains(day+1)
@@ -52,8 +52,8 @@ public class Employee {
     	return this.quota;
     }
 
-    public SortedSet<Integer> getDates() {
-        return this.dates;
+    public SortedSet<Integer> getAvailability() {
+        return this.availability;
     }
 
     public int getShiftCount() {
@@ -75,8 +75,8 @@ public class Employee {
         this.quota = quota;
     }
 
-    public void setDates(SortedSet<Integer> dates) {
-        this.dates = dates;
+    public void setAvailability(SortedSet<Integer> availability) {
+        this.availability = availability;
     }
 
 
@@ -86,7 +86,7 @@ public class Employee {
                 "name='" + name + '\'' +
                 ", quota=" + quota +
                 ", schedule=" + schedule +
-                ", availability=" + dates +
+                ", availability=" + availability +
                 '}';
     }
     

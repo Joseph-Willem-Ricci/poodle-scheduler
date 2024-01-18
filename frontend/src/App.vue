@@ -14,10 +14,18 @@
         </form>
         <button @click="submitAll">Get Schedule</button>
       </div>
-      <div v-if="responseData">
+      <div v-if="schedule">
+        <h2>Employee Shifts</h2>
+        <div v-for="(shifts, employee) in employeeShifts" :key="employee">
+          <h3>{{ employee }}</h3>
+          <div>Shifts: {{ shifts.join(', ') }}</div>
+        </div>
+        <p>Donations can be made via PayPal to <a :href="'https://paypal.me/jwricci'" target="_blank">https://paypal.me/jwricci</a></p>
         <h2>Schedule</h2>
-        {{ responseData }}
-        <p>Donations can be made via PayPal to <a :href="'https://paypal.me/jwricci'" target="_blank">https://paypal.me/jwricci</a></p>      </div>
+        <div v-for="(employee, day) in schedule" :key="day">
+          {{ day }}: {{ employee }}
+        </div>
+      </div>
       <div class="availabilities">
         <h2 v-if="availabilities.length">Employee Availabilities</h2>
         <div v-for="(availability, index) in availabilities" :key="index">
@@ -45,10 +53,11 @@ export default {
       selectedDates: [],
       availabilities: [],
       quota: null,
+      schedule: null,
       editIndex: null,
       availability: null,
-      responseData: null,
       selectedMonth: null,
+      employeeShifts: null,
       monthSelected: false
     };
   },
@@ -137,7 +146,7 @@ export default {
             const dateObject = new Date(date);
             return dateObject.getDate();
           });
-          return { ...availability, dates: transformedDates };
+          return { ...availability, availability: transformedDates };
         });
 
         // Compile availabilities into format that the backend expects
@@ -147,8 +156,10 @@ export default {
         };
 
         const response = await axios.post('https://pet-poodle-scheduler.koyeb.app/api/process', data);
+        // const response = await axios.post('http://localhost:8080/api/process', data);
         if (response.status === 200) {
-          this.responseData = response.data;
+          this.schedule = response.data.schedule;
+          this.employeeShifts = response.data.employeeShifts;
         }
         else if (response.status === 500) {
           console.error("Error: ", response.data)
@@ -168,7 +179,7 @@ export default {
 <style>
 .wrap {
     margin: 0px auto;
-    max-width: 250px;
+    max-width: 1000px;
 }
 
 .p-calendar td span {

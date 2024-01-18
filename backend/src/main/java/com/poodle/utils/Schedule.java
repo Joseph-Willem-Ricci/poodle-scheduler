@@ -16,9 +16,12 @@ public class Schedule {
         return this.totalDays;
     }
 
-
     public int getFilledDays(){
         return this.filledDays;
+    }
+
+    public Employee[] getSchedule(){
+        return this.schedule;
     }
 
     public boolean assignEmployee(int day, Employee employee){

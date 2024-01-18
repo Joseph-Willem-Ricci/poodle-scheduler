@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class ProcessorController {
 
-    @CrossOrigin(origins = {"https://www.poodlescheduler.com", "http://www.poodlescheduler.com", "https://poodlescheduler.com", "http://poodlescheduler.com", "http://localhost:8080"})
+    @CrossOrigin(origins = {"https://www.poodlescheduler.com", "http://www.poodlescheduler.com", "https://poodlescheduler.com", "http://poodlescheduler.com", "http://localhost:8081"})
     @PostMapping("/process")
-    public String processFrontEndInput(@RequestBody ScheduleRequest request) {
+    public ScheduleResponse processFrontEndInput(@RequestBody ScheduleRequest request) {
         Processor processor = new Processor(request.getEmployeeList(), request.getNumberOfDays());
-        String schedule = processor.run();
-        return schedule;
+        ScheduleResponse scheduleRsp = processor.run();
+        return scheduleRsp;
     }
 }

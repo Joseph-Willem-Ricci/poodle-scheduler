@@ -34,7 +34,7 @@ public class Processor {
 
     public void addEmployeesToAvailabilityMap() {
         for(Employee e: employees) {
-            for(Integer day: e.getDates()) {
+            for(Integer day: e.getAvailability()) {
                 Set<Employee> availableOnDay = availabilityMap.get(day);
                 availableOnDay.add(e);
             }
@@ -127,17 +127,21 @@ public class Processor {
     	
     }
 
-    public String run() {  // TODO: Format output for frontend instead of String
+    public ScheduleResponse run() {  // TODO: Format output for frontend instead of String
 
     	validateInputs();
     	
         assignEmployeesDeterministically();
         if (schedule.getFilledDays() == daysInMonth) {
-            String employeeShifts = "";
+            Map<String, SortedSet<Integer>> employeeShifts = new HashMap<String, SortedSet<Integer>>();
             for (Employee e : employees) {
-                employeeShifts += e.getName() + ": " + e.getSchedule() + "\n";
+                employeeShifts.put(e.getName(), e.getSchedule());
             }
-            return schedule.toString() + "\n" + employeeShifts;
+            Map<Integer, String> scheduleRsp = new HashMap<Integer, String>();
+            for (int i = 1; i <= daysInMonth; i++) {
+                scheduleRsp.put(i, schedule.getEmployeeAssignedForGivenDay(i).getName());
+            }
+            return new ScheduleResponse(scheduleRsp, employeeShifts);
         }
 
         GraphTraversalHelper graphTraversalHelper = new GraphTraversalHelper(availabilityMap, employees, daysInMonth, randomness);
@@ -153,11 +157,15 @@ public class Processor {
         }
 
         if (schedule.getFilledDays() == daysInMonth) {
-            String employeeShifts = "";
+            Map<String, SortedSet<Integer>> employeeShifts = new HashMap<String, SortedSet<Integer>>();
             for (Employee e : employees) {
-                employeeShifts += e.getName() + ": " + e.getSchedule() + "\n";
+                employeeShifts.put(e.getName(), e.getSchedule());
             }
-            return schedule.toString() + "\n\n" + employeeShifts;
+            Map<Integer, String> scheduleRsp = new HashMap<Integer, String>();
+            for (int i = 1; i <= daysInMonth; i++) {
+                scheduleRsp.put(i, schedule.getEmployeeAssignedForGivenDay(i).getName());
+            }
+            return new ScheduleResponse(scheduleRsp, employeeShifts);
         }
         
         throw new NoPossibleScheduleException("No schedule was found for your input availabilies. Please double check your inputs.");
