@@ -13,4 +13,4 @@ Moving forward, I hope to:
 - generalize the algorithm and interface to allow for flexible, custom scheduling beyond the current one-employee-per-day model
 - improve search efficiency through heuristic variable selection and constraint learning.
 
-Moreover, I believe there might also be novel improvements to be made in turning CSP solvers into informed search algorithms by using search states as inputs and outcomes as labels for ML models to derive heuristic functions that guide search down promising branches.During the UPenn MOSA F
+Moreover, I believe there might also be novel improvements to be made in turning CSP solvers into informed search algorithms by using search states as inputs and outcomes as labels for ML models to derive heuristic functions that guide search down promising branches.
